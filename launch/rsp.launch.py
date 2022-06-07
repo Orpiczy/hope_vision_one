@@ -14,10 +14,13 @@ def generate_launch_description():
 
     # Check if we're told to use sim time
     use_sim_time = LaunchConfiguration('use_sim_time')
+    
+    output="screen"
 
     # Process the URDF file
     pkg_path = os.path.join(get_package_share_directory('hope_vision_one'))
     xacro_file = os.path.join(pkg_path,'description','robot.urdf.xacro')
+    print(xacro_file)
     robot_description_config = xacro.process_file(xacro_file)
     
     # Create a robot_state_publisher node
