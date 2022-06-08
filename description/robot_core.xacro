@@ -1,9 +1,6 @@
 <?xml version="1.0"?>
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro">
 
-    <xacro:include filename="colors.xacro" />
-    <xacro:include filename="inertial_macros.xacro" />
-
 
     <link name="base_link"></link>
 
@@ -17,10 +14,10 @@
         <parent link="base_link" />
         <child link="chassis" />
         <origin xyz="-0.1 0 0" /> <!-- przesuniecie punktu referencyjnego -->
+
     </joint>
 
     <link name="chassis">
-
         <visual>
             <origin xyz="0.15 0 0.075" rpy="0 0 0" /> <!-- przesuniecie geometrii od punktu referencyjnego -->
             <geometry>
@@ -30,6 +27,7 @@
         </visual>
 
         <collision>
+            <origin xyz="0.15 0 0.075" />
             <geometry>
                 <box size="${chassis_width} ${chassis_length} ${chassis_height}" />
             </geometry>
@@ -40,6 +38,11 @@
         </xacro:inertial_box>
 
     </link>
+
+    <!-- gazebo uses different materials/colors than rviz so for correct dispaly requires additional tags -->
+    <gazebo reference="chassis">
+        <material>Gazebo/White</material>
+    </gazebo>
 
     <!-- WHEELS -->
     <xacro:property name="wheel_mass" value="0.1" />
@@ -78,6 +81,10 @@
 
     </link>
 
+    <gazebo reference="left_wheel">
+        <material>Gazebo/Blue</material>
+    </gazebo>
+
     <!-- RIGHT WHEEL -->
 
     <joint name="right_wheel_joint" type="continuous">
@@ -108,6 +115,10 @@
 
     </link>
 
+    <gazebo reference="right_wheel">
+        <material>Gazebo/Blue</material>
+    </gazebo>
+
     <!-- CASTER WHEEL -->
     <xacro:property name="caster_mass" value="0.1" />
     <xacro:property name="caster_radius" value="0.05" />
@@ -130,11 +141,15 @@
                 <sphere radius="${caster_radius}" />
             </geometry>
         </collision>
-
         <xacro:inertial_sphere mass="${caster_mass}" radius="${caster_radius}">
             <origin xyz="0 0 0" rpy="0 0 0" />
         </xacro:inertial_sphere>
-
     </link>
+
+    <gazebo reference="caster_wheel">
+        <material>Gazebo/Black</material>
+        <mu1 value="0.001" />
+        <mu2 value="0.001" />
+    </gazebo>
 
 </robot>
