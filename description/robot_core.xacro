@@ -19,7 +19,7 @@
 
     <link name="chassis">
         <visual>
-            <origin xyz="0.15 0 0.075" rpy="0 0 0" /> <!-- przesuniecie geometrii od punktu referencyjnego -->
+            <origin xyz="${chassis_width* 0.5} 0 0${chassis_height * 0.5}" rpy="0 0 0" /> <!-- przesuniecie geometrii od punktu referencyjnego, polowa wymiarow jak rzucisz okiem-->
             <geometry>
                 <box size="${chassis_width} ${chassis_length} ${chassis_height}" />
             </geometry>
@@ -34,7 +34,7 @@
         </collision>
 
         <xacro:inertial_box mass="${chassis_mass}" x="${chassis_width}" y="${chassis_length}" z="${chassis_height}">
-            <origin xyz="0.15 0 0.075" rpy="0 0 0" />
+            <origin xyz="${chassis_width* 0.5} 0 0${chassis_height * 0.5}" rpy="0 0 0" />
         </xacro:inertial_box>
 
     </link>

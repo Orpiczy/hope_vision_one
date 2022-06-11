@@ -1,0 +1,90 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+    <xacro:property name="camera_mass" value="0.05" />
+    <!-- x -->
+    <xacro:property name="camera_width" value="0.03" />
+    <!-- y -->
+    <xacro:property name="camera_length" value="0.05" />
+    <!-- z -->
+    <xacro:property name="camera_height" value="0.05" />
+
+    <joint name="camera_joint" type="fixed">
+        <parent link="chassis" />
+        <child link="camera_frame" />
+        <origin xyz="${chassis_width + camera_width}  0 ${chassis_height * 0.5}" rpy="0 0 0" /> <!-- przesuniecie punktu referencyjnego, który domyślnie jest w środku geometrii-->
+    </joint>
+
+    <link name="camera_frame">
+        <visual>
+            <!-- najwyrazniej kamera generuje obraz od swojego refernece point, dlatego takie przesuniecie -->
+            <origin xyz="${-camera_width * 0.5} 0 0" rpy="0 0 0" /> <!-- przesuniecie geometrii od punktu referencyjnego, polowa wymiarow jak rzucisz okiem-->
+            <geometry>
+                <box size="${camera_width} ${camera_length} ${camera_height}" />
+            </geometry>
+            <material name="yellow" />
+        </visual>
+
+        <collision>
+            <geometry>
+                <box size="${camera_width} ${camera_length} ${camera_height}" />
+            </geometry>
+        </collision>
+
+        <xacro:inertial_box mass="${camera_mass}" x="${camera_width}" y="${camera_length}" z="${camera_height}">
+            <origin xyz="${camera_width * 0.5} 0 ${camera_height * 0.5}" rpy="0 0 0" />
+        </xacro:inertial_box>
+    </link>
+
+    <gazebo reference="camera_frame">
+
+        <material>Gazebo/Yellow</material>
+
+        <sensor name="camera" type="camera">
+
+            <!-- parameters for simulated sensor, should be as similar 
+                as possible to real object-->
+
+            <camera>
+                <horizontal_fov>1.047</horizontal_fov>
+                <image>
+                    <width>320</width>
+                    <height>240</height>
+                </image>
+                <clip>
+                    <near>0.1</near>
+                    <far>100</far>
+                </clip>
+            </camera>
+            <always_on>1</always_on>
+            <update_rate>30</update_rate>
+            <visualize>true</visualize>
+
+            <plugin name="camera_controller" filename="libgazebo_ros_camera.so">
+                <alwaysOn>true</alwaysOn>
+                <updateRate>0.0</updateRate>
+                <cameraName>camera</cameraName>
+                <imageTopicName>image_raw</imageTopicName>
+                <cameraInfoTopicName>camera_info</cameraInfoTopicName>
+                <frameName>camera_link_optical</frameName>
+                <!-- setting hackBaseline to anything but 0.0 will cause a misalignment
+                         between the gazebo sensor image and the frame it is supposed to
+                         be attached to -->
+                <hackBaseline>0.0</hackBaseline>
+                <distortionK1>0.0</distortionK1>
+                <distortionK2>0.0</distortionK2>
+                <distortionK3>0.0</distortionK3>
+                <distortionT1>0.0</distortionT1>
+                <distortionT2>0.0</distortionT2>
+                <CxPrime>0</CxPrime>
+                <Cx>0.0</Cx>
+                <Cy>0.0</Cy>
+                <focalLength>0.0</focalLength>
+            </plugin>
+
+        </sensor>
+
+
+    </gazebo>
+
+</robot> 
